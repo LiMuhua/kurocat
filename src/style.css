@@ -90,6 +90,25 @@ html.pet-hover-hidden #update-toast {
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 0.9fr);
 }
 
+/* At real menu widths (266-276px) the narrow outer columns still clip localized
+   labels such as "🎧 Always" and "🎧 항상 착용". Let only this row's pills wrap to
+   two lines inside the same 26px pill height, so the row does not grow. keep-all
+   stops Korean words from splitting; anywhere is a last-resort break only. */
+#headphone-row .render-mode-pills .kb-pill {
+  height: 26px;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.1;
+}
+
 .collar-pills {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
