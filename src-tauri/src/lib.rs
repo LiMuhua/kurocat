@@ -9,6 +9,8 @@ mod input_hook;
 mod macos_window;
 mod mcp;
 mod obs;
+#[cfg(windows)]
+mod panel;
 mod privacy;
 mod tray;
 mod updater;
@@ -726,6 +728,8 @@ async fn open_context_menu(app: AppHandle) -> Result<(), String> {
     let _ = menu_win.set_size(Size::Logical(LogicalSize::new(lw, lh)));
     let _ = menu_win.set_position(PhysicalPosition::new(mx, my));
     let _ = menu_win.set_always_on_top(true);
+    #[cfg(windows)]
+    panel::make_panel(&menu_win);
     let _ = menu_win.show();
     let _ = menu_win.set_focus();
     let _ = app.emit("kuro-menu-opened", ());
@@ -2406,6 +2410,9 @@ pub fn run() {
             }
 
             if let Some(win) = app.get_webview_window("main") {
+                // 先挂面板子类，之后 tao 的每次样式重写都会被改回面板样式（见 panel 模块说明）。
+                #[cfg(windows)]
+                panel::make_panel(&win);
                 let (win_w, win_h) = window_dimensions(&s.keyboard_layout, s.scale);
                 let _ = win.set_size(Size::Logical(LogicalSize::new(win_w, win_h)));
                 #[cfg(not(target_os = "macos"))]
